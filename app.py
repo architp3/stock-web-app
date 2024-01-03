@@ -21,7 +21,8 @@ base_year = 2010
 min_diff = 3
 current_year = int(datetime.strftime(datetime.today(), '%Y'))
 end_year = current_year
-start_year = st.slider('Choose a Start Date', min_value=base_year, max_value = end_year)
+scroll_year = end_year - 1
+start_year = st.slider('Choose a Start Date', min_value=base_year, max_value = scroll_year)
 start = f'{start_year}-01-01'
 end = datetime.strftime(datetime.today(), '%Y-%m-%d')
 
@@ -56,7 +57,7 @@ if start_button:
 
     st.markdown('<br>', unsafe_allow_html=True)
     st.markdown('<br>', unsafe_allow_html=True)
-    
+
     # Show plot of rolling mean for 100 days
     roll_100 = df['Close'].rolling(100).mean()
     fig1, ax1 = plt.subplots()
