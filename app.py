@@ -22,7 +22,7 @@ min_diff = 3
 current_year = int(datetime.strftime(datetime.today(), '%Y'))
 end_year = current_year
 scroll_year = end_year - 1
-start_year = st.slider('Choose a Start Date', min_value=base_year, max_value = scroll_year)
+start_year = st.slider('Choose a Start Date:', min_value=base_year, max_value = scroll_year)
 start = f'{start_year}-01-01'
 end = datetime.strftime(datetime.today(), '%Y-%m-%d')
 
@@ -53,7 +53,7 @@ if start_button:
     df = yf.download(str(stock), start=start, end=end)
     df = df.reset_index()
     df.set_index(['Date'], inplace=True)
-    st.dataframe(df.describe())
+    AgGrid(df.describe().reset_index().rename(columns={'index': 'stat'}))
 
     st.markdown('<br>', unsafe_allow_html=True)
     st.markdown('<br>', unsafe_allow_html=True)
@@ -95,7 +95,9 @@ if start_button:
     X_train = []
     y_train = []
 
-    period = 100
+    min_days = 100
+    max_days = 500
+    period = st.slider('Amount of days you want to base your prediction on ', min_value=min_days, max_value = max_days)
     for i in range(period, len(training)):
         X_train.append(training[i-period:i])
         y_train.append(training[i][0])
@@ -103,7 +105,23 @@ if start_button:
     X_train = np.array(X_train)
     y_train = np.array(y_train)
 
-    model = tf.keras.models.load_model('pred_model.keras')
+    model = Sequential()
+    # model.add(LSTM(units=50, activation='relu', return_sequences=True, input_shape=(X_train.shape[1],1)))
+    # model.add(Dropout(0.2))
+
+    # model.add(LSTM(units=60, activation='relu', return_sequences=True))
+    # model.add(Dropout(0.3))
+
+    # model.add(LSTM(units=60, activation='relu', return_sequences=True))
+    # model.add(Dropout(0.3))
+
+    # model.add(LSTM(units=60, activation='relu'))
+    # model.add(Dropout(0.3))
+
+    # model.add(Dense(units=1))
+
+    # model.compile(optimizer='adam', loss='mean_squared_error')
+    # model.fit(X_train, y_train, epochs=50)
 
     # Model Info (Optional)
 
@@ -145,8 +163,8 @@ if start_button:
 
     # Model Performance Metrics
     st.markdown(f"<h3 style='text-align: left; color: white;'>Model Statistics</h1>", unsafe_allow_html=True)
-    st.markdown(f"<p style='text-align: center; color: red;'>Mean Squared Error: {mean_squared_error(predicted,y_test)}</p>", unsafe_allow_html=True)
-    st.markdown(f"<p style='text-align: center; color: red;'>Mean Absolute Error: {mean_absolute_error(predicted,y_test)}</p>", unsafe_allow_html=True)
+    st.markdown(f"<p style='text-align: center; color: red;'>Mean Squared Error (MSE): {mean_squared_error(predicted,y_test)}</p>", unsafe_allow_html=True)
+    st.markdown(f"<p style='text-align: center; color: red;'>Mean Absolute Error (MAE): {mean_absolute_error(predicted,y_test)}</p>", unsafe_allow_html=True)
     
 
 
