@@ -1,1 +1,1 @@
-# stock-web-app
+# Stock Trend Analysis and Prediction
